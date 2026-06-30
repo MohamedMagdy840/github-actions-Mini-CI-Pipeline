@@ -1,0 +1,29 @@
+name: Task 3 - Mini CI Pipeline
+
+on:
+  push:
+    branches: [main, dev]
+
+
+env:
+  GREETING: "Welcome to CI"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run "tests"
+        run: |
+          echo "$GREETING"
+          echo "Simulating tests..."
+          test -f README.md && echo "README found ✅" || (echo "README missing ❌" && exit 1)
+
+  notify:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy message
+        run: echo "This would deploy because we're on main!"
